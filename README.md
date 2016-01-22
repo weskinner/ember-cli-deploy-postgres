@@ -53,7 +53,7 @@ $ ember install ember-cli-deploy-mysql
 - Place the following configuration into `config/deploy.js`:
 
 ```javascript
-ENV.mysql = {
+ENV.postgres = {
   user: '<your-mysql-user>',
   password: '<your-mysql-password>',
   database: '<your-mysql-database>'
