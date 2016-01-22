@@ -1,6 +1,6 @@
-# ember-cli-deploy-mysql
+# ember-cli-deploy-postgres
 
-> Deploy your Ember.js index to MySQL
+> Deploy your Ember.js index to Postgres
 
 [![](https://ember-cli-deploy.github.io/ember-cli-deploy-version-badges/plugins/ember-cli-deploy-mysql.svg)](http://ember-cli-deploy.github.io/ember-cli-deploy-version-badges/)
 
