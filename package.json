@@ -1,7 +1,7 @@
 {
-  "name": "ember-cli-deploy-mysql",
-  "version": "0.0.3",
-  "description": "Deploy your Ember.js index to MySQL",
+  "name": "ember-cli-deploy-postgres",
+  "version": "0.0.1",
+  "description": "Deploy your Ember.js index to Postgres",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -11,11 +11,11 @@
     "start": "ember server",
     "test": "ember try:testall"
   },
-  "repository": "https://github.com/mwpastore/ember-cli-deploy-mysql",
+  "repository": "https://github.com/weskinner/ember-cli-deploy-postgres",
   "engines": {
     "node": ">= 4.2.0"
   },
-  "author": "Mike Pastore <mike@oobak.org>",
+  "author": "William Skinner <skinner89@gmail.com",
   "license": "MIT",
   "devDependencies": {
     "broccoli-asset-rev": "^2.2.0",
@@ -41,13 +41,15 @@
     "ember-addon",
     "ember-cli-deploy",
     "ember-cli-deploy-plugin",
-    "mysql",
-    "mariadb"
+    "postgres",
+    "postgresql",
+    "psql"
   ],
   "dependencies": {
     "core-object": "^1.1.0",
     "ember-cli-babel": "^5.1.5",
     "ember-cli-deploy-plugin": "^0.2.0",
+    "pg-promise": "^3.0.3",
     "promise-mysql": "^1.1.1",
     "rsvp": "^3.1.0"
   },

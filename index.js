@@ -10,7 +10,7 @@ var denodeify = require('rsvp').denodeify;
 var readFile = denodeify(fs.readFile);
 
 module.exports = {
-  name: 'ember-cli-deploy-mysql',
+  name: 'ember-cli-deploy-postgres',
 
   createDeployPlugin: function (options) {
     var MySQL = require('./lib/mysql');
