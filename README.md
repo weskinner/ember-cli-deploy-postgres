@@ -20,9 +20,9 @@ $ ember install ember-cli-deploy-postgres
 
 ```javascript
 ENV.postgres = {
-  user: '<your-mysql-user>',
-  password: '<your-mysql-password>',
-  database: '<your-mysql-database>'
+  user: '<your-postgres-user>',
+  password: '<your-postgres-password>',
+  database: '<your-postgres-database>'
 }
 ```
 
