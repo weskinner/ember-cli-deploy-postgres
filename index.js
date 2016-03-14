@@ -25,7 +25,7 @@ module.exports = {
             return context.tunnel.srcPort;
           }
           else {
-            return 3306;
+            return 5432;
           }
         },
         maxRecentUploads: 10,
