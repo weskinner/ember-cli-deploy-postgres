@@ -39,9 +39,9 @@ module.exports = {
         revisionKey: function (context) {
           return context.commandOptions.revision || (context.revisionData && context.revisionData.revisionKey);
         },
-        deployClient: function (context) {
-          var mysqlOptions = this.pluginConfig;
-          mysqlOptions.port = this.readConfig('port');
+        deployClient: function (context, pluginHelper) {
+          var mysqlOptions = this;
+          mysqlOptions.port = pluginHelper.readConfig('port');
           var mysqlLib = context._mysqlLib;
 
           return new MySQL(mysqlOptions, mysqlLib);
