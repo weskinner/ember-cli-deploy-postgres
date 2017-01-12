@@ -12,7 +12,7 @@ var readFile = denodeify(fs.readFile);
 module.exports = {
   name: 'ember-cli-deploy-postgres',
 
-  createDeployPlugin: function (options) {
+  createDeployPlugin: function(options) {
     var MySQL = require('./lib/mysql');
 
     var DeployPlugin = DeployPluginBase.extend({
@@ -20,33 +20,41 @@ module.exports = {
 
       defaultConfig: {
         host: 'localhost',
-        port: function (context) {
+        port: function(context) {
           if (context.tunnel && context.tunnel.srcPort) {
             return context.tunnel.srcPort;
-          }
-          else {
+          } else {
             return 5432;
           }
         },
         maxRecentUploads: 10,
-        distDir: function (context) {
+        distDir: function(context) {
           return context.distDir;
         },
         filePattern: 'index.html',
-        tableName: function (context) {
+        tableName: function(context) {
           return context.project.name().replace(/-/g, '_') + '_bootstrap';
         },
-        revisionKey: function (context) {
+        revisionKey: function(context) {
           return context.commandOptions.revision || (context.revisionData && context.revisionData.revisionKey);
         },
-        deployClient: function (context, pluginHelper) {
-          var mysqlOptions = this;
-          mysqlOptions.port = pluginHelper.readConfig('port');
+        deployClient: function(context, pluginHelper) {
+          var options = {
+            host: pluginHelper.readConfig('host'),
+            port: pluginHelper.readConfig('port'),
+            user: pluginHelper.readConfig('user'),
+            password: pluginHelper.readConfig('password'),
+            database: pluginHelper.readConfig('database'),
+            maxRecentUploads: pluginHelper.readConfig('maxRecentUploads'),
+            allowOverwrite: pluginHelper.readConfig('allowOverwrite'),
+            activationSuffix: pluginHelper.readConfig('activationSuffix')
+          };
+
           var mysqlLib = context._mysqlLib;
 
-          return new MySQL(mysqlOptions, mysqlLib);
+          return new MySQL(options, mysqlLib);
         },
-        didDeployMessage: function (context) {
+        didDeployMessage: function(context) {
           var revisionKey = context.revisionData && context.revisionData.revisionKey;
           var activatedRevisionKey = context.revisionData && context.revisionData.activatedRevisionKey;
 
@@ -59,7 +67,7 @@ module.exports = {
 
       requiredConfig: ['database', 'user', 'password'],
 
-      configure: function (/* context */) {
+      configure: function( /* context */ ) {
         this.log('validating config', { verbose: true });
 
         var properties = [
@@ -82,7 +90,7 @@ module.exports = {
         this.log('config ok', { verbose: true });
       },
 
-      upload: function (/* context */) {
+      upload: function( /* context */ ) {
         var deployClient = this.readConfig('deployClient');
         var tableName = this.readConfig('tableName');
         var revisionKey = this.readConfig('revisionKey');
@@ -94,7 +102,7 @@ module.exports = {
         return this._readFileContents(filePath)
           .then(deployClient.upload.bind(deployClient, tableName, revisionKey))
           .then(this._uploadSuccessMessage.bind(this))
-          .then(function (args) {
+          .then(function(args) {
             return {
               tableName: args[0],
               revisionKey: args[1]
@@ -103,7 +111,7 @@ module.exports = {
           .catch(this._errorMessage.bind(this));
       },
 
-      willActivate: function (/* context */) {
+      willActivate: function( /* context */ ) {
         var deployClient = this.readConfig('deployClient');
         var tableName = this.readConfig('tableName');
 
@@ -116,7 +124,7 @@ module.exports = {
         };
       },
 
-      activate: function (/* context */) {
+      activate: function( /* context */ ) {
         var deployClient = this.readConfig('deployClient');
         var revisionKey = this.readConfig('revisionKey');
         var tableName = this.readConfig('tableName');
@@ -124,7 +132,7 @@ module.exports = {
         this.log('Activating revision `' + revisionKey + '`', { verbose: true });
         return Promise.resolve(deployClient.activate(tableName, revisionKey))
           .then(this.log.bind(this, '✔ Activated revision `' + revisionKey + '`', {}))
-          .then(function () {
+          .then(function() {
             return {
               revisionData: {
                 activatedRevisionKey: revisionKey
@@ -134,20 +142,20 @@ module.exports = {
           .catch(this._errorMessage.bind(this));
       },
 
-      didDeploy: function (/* context */){
+      didDeploy: function( /* context */ ) {
         var didDeployMessage = this.readConfig('didDeployMessage');
         if (didDeployMessage) {
           this.log(didDeployMessage);
         }
       },
 
-      fetchRevisions: function (/* context */) {
+      fetchRevisions: function( /* context */ ) {
         var deployClient = this.readConfig('deployClient');
         var tableName = this.readConfig('tableName');
 
         this.log('Listing revisions in table: `' + tableName + '`');
         return Promise.resolve(deployClient.fetchRevisions(tableName))
-          .then(function (revisions) {
+          .then(function(revisions) {
             return {
               revisions: revisions
             };
@@ -155,20 +163,20 @@ module.exports = {
           .catch(this._errorMessage.bind(this));
       },
 
-      _readFileContents: function (path) {
+      _readFileContents: function(path) {
         return readFile(path)
-          .then(function (buffer) {
+          .then(function(buffer) {
             return buffer.toString();
           });
       },
 
-      _uploadSuccessMessage: function (args) {
+      _uploadSuccessMessage: function(args) {
         this.log('Uploaded to table `' + args[0] +
           '` with key `' + args[1] + '`', { verbose: true });
         return Promise.resolve(args);
       },
 
-      _errorMessage: function (error) {
+      _errorMessage: function(error) {
         this.log(error, { color: 'red' });
         return Promise.reject(error);
       }
